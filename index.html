@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,11 +9,15 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+    <link id="favicon" rel="icon" href="light-theme_icon.png" type="image/png">
 </head>
 <body>
     <header>
-        <h1>Franquet Balian</h1>
-        <button id="theme-toggle" aria-label="Toggle dark mode">🌙 Dark mode</button>
+                <h1>Franquet Balian</h1>
+                <div class="theme-controls">
+                    <button id="theme-toggle" aria-label="Toggle dark mode">🌙 Dark mode</button>
+                    <button id="theme-system" aria-label="Use system theme">🖥 System</button>
+                </div>
         <nav>
             <a href="#about">About</a>
             <a href="#projects">Projects</a>
@@ -26,22 +30,36 @@
         <p>Hello! I'm Franquet Balian, an engineering student. And this is my portfolio website.</p>
     </section>
 
+
+
     <section id="projects">
-        <h2>Projects</h2>
-        <ul>
-            <li>My first website - This Portfolio is my first real project</li>
-        </ul>
+    <h2>Projects</h2>
+    <div class="projects-grid">
+        <div class="project">
+        <h3><a href="project1.html">This Portfolio ✨</a></h3>
+        <p>The very website you're exploring — handcrafted with curiosity, coffee ☕ and a dash of CSS magic. Peek the code, explore the design.</p>
+        </div>
+        <div class="project">
+        <h3><a href="project2.html">Something Awesome — Coming Soon 🚀</a></h3>
+        <p>Currently under construction! A fun project is cooking — subscribe to updates (or just check back soon).</p>
+        </div>
+    </div>
     </section>
 
+
+
+
     <section id="contact">
-        <h2>Contact</h2>
-        <p>Email: balian.franquet@gmail.com</p>
-        <p>Phone: +32 468 45 68 84</p>
+    <h2>Contact</h2>
+    <p>Mail address: <a href="mailto:balian.franquet@gmail.com">balian.franquet@gmail.com</a></p>
+    <p>Github: <a href="https://github.com/balian00" target="_blank" rel="noopener">github.com/balian00</a></p>
+    <p>Phone number : <a href="tel:+32468456884">+32 468 45 68 84</a></p>
     </section>
+
 
     <footer>
         <p>&copy; 2025 Franquet Balian</p>
-        <p> Version 0.0 - Currently private </p>
+        <p> Version 1.0 - First time pusblished </p>
     </footer>
     <script src="scrypt.js"></script>
 </body>
