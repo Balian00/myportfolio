@@ -1,0 +1,71 @@
+:root {
+    --bg-color: #f4f4f9;          /* Light gray background for readability */
+    --header-color: #2c3e50;      /* Dark blue-gray for header/footer */
+    --content-color: #ffffff;     /* White for content sections */
+    --accent-color: #3498db;      /* Bright blue for links and highlights */
+    --text-color: #333333;        /* Dark gray for text */
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+header {
+    background-color: var(--header-color);
+    color: var(--content-color);
+    text-align: center;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+nav {
+    margin-top: 10px;
+}
+
+nav a {
+    color: var(--accent-color);
+    margin: 0 15px;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+section {
+    padding: 40px;
+    max-width: 800px;
+    margin: auto;
+    background-color: var(--content-color);
+    color: var(--text-color);
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+footer {
+    text-align: center;
+    padding: 10px;
+    background-color: var(--header-color);
+    color: var(--content-color);
+}
+
+
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    section {
+        padding: 20px;
+        margin: 10px;
+    }
+
+    nav a {
+        display: block;
+        margin: 10px 0;
+    }
+}
