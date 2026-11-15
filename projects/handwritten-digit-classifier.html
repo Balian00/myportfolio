@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project 3 - My Portfolio</title>
+    <link rel="stylesheet" href="../main/style.css">
+    <script src="../main/scrypt.js" defer></script>
+</head>
+<body>
+    <header>
+        <h1>My Portfolio</h1>
+        <nav>
+            <a href="../main/index.html">Home</a>
+            <a href="#projects">Projects</a>
+            <a href="#contact">Contact</a>
+        </nav>
+        <div class="theme-controls">
+            <button id="theme-toggle" aria-label="Toggle dark mode">🌙 Dark mode</button>
+            <button id="theme-system" aria-label="Use system theme">🖥 System</button>
+        </div>
+    </header>
+
+    <main>
+        <section id="projects">
+            <h2>Handwritten Digit Classifier — Project Description</h2>
+
+            <p>
+                The <strong>Handwritten Digit Classifier</strong> is a CNN (convolutional neural network) built with
+                <a href="https://pytorch.org/" target="_blank" rel="noopener noreferrer">PyTorch</a> and trained on a
+                <a href="https://www.kaggle.com/datasets/panghalvishesh/handwritten-digit" target="_blank" rel="noopener noreferrer">Kaggle dataset</a>
+                to recognize handwritten digits from 0 to 9.
+            </p>
+
+            <h3>Use of AI</h3>
+            <p>
+                This project was built entirely by me — architecture, training logic, data pipeline, debugging, and
+                all design decisions. AI was used in a limited, assistive capacity for the following:
+            </p>
+            <ul>
+                <li><strong>Prints</strong> — written by me, minor aesthetic improvements suggested by AI (alignment, symbols).</li>
+                <li><strong>README</strong> — structured and initially written by me; AI lightly rephrased some sections for fluency and corrected grammar.</li>
+                <li><strong>Docstrings</strong> — written by me, AI translated them to English and reformatted them to Google style.</li>
+                <li><strong>Results table</strong> — data and analysis are mine; AI reformatted the table into the per-parameter breakdown format.</li>
+                <li><strong>Two minor optimizations</strong> — AI suggested adding <code>num_workers=2</code> and <code>pin_memory=True</code> to the DataLoader, and using a larger batch size during evaluation, both one-line changes.</li>
+            </ul>
+
+            <h3>Current Status (V3)</h3>
+            <p>
+                The CNN correctly recognizes almost all handwritten digits tested manually. The model is trained on a
+                Kaggle handwritten digit dataset with data augmentation (random crop, slight random rotation, random
+                contrast and brightness variation), which significantly improves generalization compared to V1.
+            </p>
+            <p>Compared to V2, this version focuses on code quality rather than new features:</p>
+            <ul>
+                <li><strong>Security / robustness</strong> — explicit error handling (missing dataset, invalid image, missing or corrupted <code>model.pth</code>) with clear messages instead of raw crashes.</li>
+                <li><strong>Clean, PEP8 code</strong> — consistent naming, type hints on functions, docstrings, code written in English.</li>
+                <li><strong>Light optimizations</strong> — <code>torch.no_grad()</code> during evaluation, <code>DataLoader</code> with <code>num_workers</code>/<code>pin_memory</code>, larger evaluation batch size than the training one.</li>
+                <li><strong>Shorter code</strong> — removal of the custom batch generator (made unnecessary by <code>DataLoader</code>), factored paths and CLI logic in <code>main.py</code>.</li>
+            </ul>
+            <p>
+                <em>Note: "almost all handwritten digits tested manually" refers to digits written in a way reasonably
+                close to the dataset. The dataset sometimes contains digit representations that differ from how the
+                reader writes them, so it is suggested to compare your handwriting to the dataset's when testing
+                manually via <code>test_one</code>.</em>
+            </p>
+
+            <h3>How the Code Works</h3>
+            <ul>
+                <li><code>data.py</code> — loads the dataset with <code>ImageFolder</code> and builds the transform pipeline (resizing, grayscale conversion, normalization) with optional augmentation (random crop, slight rotation, contrast/brightness variation). Also provides <code>get_dataloader</code>, which creates a <code>DataLoader</code> with <code>num_workers</code> and <code>pin_memory</code> to speed up batch loading.</li>
+                <li><code>model.py</code> — defines the CNN architecture (two convolution blocks + ReLU activation + pooling, followed by a fully connected layer producing the 10 classification scores).</li>
+                <li><code>engine.py</code> — contains the training loop (<code>train</code>), batch evaluation on the test set (<code>test</code>, under <code>torch.no_grad()</code>), and single-image testing (<code>test_one</code>). Weights are only saved when accuracy improves.</li>
+                <li><code>main.py</code> — command-line entry point (via <code>click</code>) that selects the execution mode (<code>train</code>, <code>test</code>, <code>test_one</code>), loads/splits the dataset, and handles loading/saving the model weights (<code>model.pth</code>), with explicit error handling (missing files, invalid images).</li>
+                <li><code>const.py</code> — centralizes all hyperparameters (epochs, learning rate, split, image dimensions, augmentation parameters, random generator seed).</li>
+            </ul>
+
+            <h3>Results</h3>
+            <p>
+                All experiments were run on a single T4 GPU (Kaggle). The notebook used is available at:
+                <a href="https://www.kaggle.com/code/balianfranquet/training-cnn-model-to-digit-recognition" target="_blank" rel="noopener noreferrer">Kaggle notebook</a>.
+            </p>
+
+            <h4>Reference run</h4>
+            <p>
+                All parameters are set to their standard values. Each section below varies one parameter at a time
+                while keeping the others fixed at these reference values.
+            </p>
+            <table>
+                <thead>
+                    <tr><th>Epochs</th><th>H×W</th><th>Learning rate</th><th>Augmentation</th><th>Split</th><th>Accuracy</th><th>Time</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>30</td><td>28×28</td><td>0.01</td><td>Standard</td><td>0.14</td><td>93.00%</td><td>9.6min</td></tr>
+                </tbody>
+            </table>
+            <p>
+                These values follow the standard MNIST setup: 30 epochs, 28×28 images, lr=0.01, split=0.14
+                (equivalent to ~60K train / 10K test).
+            </p>
+
+            <h4>Effect of epochs</h4>
+            <p>
+                The number of epochs controls how many times the model sees the entire dataset during training. More
+                epochs generally improve accuracy, at the cost of training time.
+            </p>
+            <table>
+                <thead><tr><th>Epochs</th><th>Accuracy</th><th>Time</th></tr></thead>
+                <tbody>
+                    <tr><td>15</td><td>90.01%</td><td>4.8min</td></tr>
+                    <tr><td><strong>30</strong></td><td><strong>93.00%</strong></td><td><strong>9.6min</strong></td></tr>
+                    <tr><td>50</td><td>95.23%</td><td>15.9min</td></tr>
+                </tbody>
+            </table>
+            <p>More epochs consistently improve accuracy. The gain from 30 to 50 epochs (~2%) is meaningful and the time cost remains reasonable.</p>
+
+            <h4>Effect of learning rate</h4>
+            <p>
+                The learning rate controls how large each weight update step is during training. Too high and the
+                model overshoots; too low and it converges too slowly.
+            </p>
+            <table>
+                <thead><tr><th>Learning rate</th><th>Accuracy</th><th>Time</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>0.01</strong></td><td><strong>93.00%</strong></td><td><strong>9.6min</strong></td></tr>
+                    <tr><td>0.001</td><td>70.02%</td><td>9.7min</td></tr>
+                </tbody>
+            </table>
+            <p>A learning rate of 0.001 significantly underperforms with 30 epochs — the model converges too slowly to reach a good solution in the allotted time.</p>
+
+            <h4>Effect of augmentation</h4>
+            <p>
+                Data augmentation artificially increases the diversity of training images by applying random
+                transformations at load time. This helps the model generalize to real-world images rather than
+                overfitting to the clean dataset.
+            </p>
+            <p>
+                Standard augmentation: crop=4px, rotation=±10°, brightness/contrast=0.3. Light: half these values.
+                Aggressive: double these values.
+            </p>
+            <table>
+                <thead><tr><th>Augmentation</th><th>Accuracy</th><th>Time</th></tr></thead>
+                <tbody>
+                    <tr><td>False</td><td>92.44%</td><td>6.8min</td></tr>
+                    <tr><td>Light</td><td>94.73%</td><td>9.6min</td></tr>
+                    <tr><td><strong>Standard</strong></td><td><strong>93.00%</strong></td><td><strong>9.6min</strong></td></tr>
+                    <tr><td>Aggressive</td><td>78.96%</td><td>9.5min</td></tr>
+                </tbody>
+            </table>
+            <p>
+                While training without augmentation yields a competitive test set accuracy (92.44%), it fails to
+                generalize to real handwritten images — tests on images from <code>test_data/</code> show noticeably
+                worse recognition compared to augmented models. Light augmentation achieves the best balance: it
+                improves both test set accuracy and real-world generalization without over-distorting the training
+                images as aggressive augmentation does.
+            </p>
+
+            <h4>Effect of input size</h4>
+            <p>
+                The input size determines the resolution at which images are fed into the network. Larger images
+                preserve more detail but require more computation.
+            </p>
+            <table>
+                <thead><tr><th>H×W</th><th>Accuracy</th><th>Time</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>28×28</strong></td><td><strong>93.00%</strong></td><td><strong>9.6min</strong></td></tr>
+                    <tr><td>32×32</td><td>94.37%</td><td>9.7min</td></tr>
+                </tbody>
+            </table>
+            <p>Slightly larger input yields a modest accuracy gain (~1.4%) with virtually no additional time cost.</p>
+
+            <h4>Effect of train/test split</h4>
+            <p>
+                The split ratio determines what fraction of the dataset is reserved for testing. A larger test set
+                gives a more reliable accuracy estimate but leaves fewer samples for training.
+            </p>
+            <table>
+                <thead><tr><th>Split</th><th>Accuracy</th><th>Time</th></tr></thead>
+                <tbody>
+                    <tr><td><strong>0.14</strong></td><td><strong>93.00%</strong></td><td><strong>9.6min</strong></td></tr>
+                    <tr><td>0.2</td><td>92.22%</td><td>9.4min</td></tr>
+                </tbody>
+            </table>
+            <p>The standard MNIST split (0.14) slightly outperforms the larger test split, likely due to having more training data available.</p>
+
+            <h4>Optimal configuration</h4>
+            <p>
+                Based on the results above, the most promising configuration combines the best-performing value from
+                each parameter: 50 epochs, 32×32 input, lr=0.01, light augmentation, split=0.14.
+            </p>
+            <table>
+                <thead>
+                    <tr><th>Epochs</th><th>H×W</th><th>Learning rate</th><th>Augmentation</th><th>Split</th><th>Accuracy</th><th>Time</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>50</td><td>32×32</td><td>0.01</td><td>Light</td><td>0.14</td><td>95.97%</td><td>13.9min</td></tr>
+                </tbody>
+            </table>
+
+            <h3>Installation</h3>
+            <p>Create and activate a virtual environment, then install the dependencies listed in <code>requirements.txt</code>.</p>
+            <p>On Windows (PowerShell):</p>
+            <pre><code>python -m venv venv
+venv\Scripts\activate
+pip install -r requirements.txt
+</code></pre>
+            <p>On macOS/Linux:</p>
+            <pre><code>python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+</code></pre>
+
+            <h3>Usage</h3>
+            <p>All the commands below should be run from the <code>src</code> folder, once the virtual environment is activated.</p>
+            <p>Train the model:</p>
+            <pre><code>python main.py --mode train</code></pre>
+            <p>Evaluate accuracy on the test set:</p>
+            <pre><code>python main.py --mode test</code></pre>
+            <p>Test on a random image from the dataset:</p>
+            <pre><code>python main.py --mode test_one</code></pre>
+            <p>Test on an external image:</p>
+            <pre><code>python main.py --mode test_one --image adr_img.png</code></pre>
+            <p><em>Note: a set of test images is available in the <code>test_data/</code> folder.</em></p>
+
+            <h3>Dataset Structure</h3>
+            <p>The dataset structure is as follows:</p>
+            <pre><code>dataset/
+0/
+1/
+2/
+...
+9/
+</code></pre>
+            <p>This allows the use of <code>ImageFolder</code> from <code>torchvision.datasets</code>.</p>
+
+            <h3>Possible Continuations</h3>
+            <p>This project is an extensible base towards broader visual recognition problems:</p>
+            <ul>
+                <li><strong>Handwritten letters</strong> — extend the classification to the 26 letters of the alphabet (or even both cases), relying on the same CNN architecture with an adapted number of output classes.</li>
+                <li><strong>Digits in real-world conditions</strong> — train the model on digits photographed in varied contexts (house numbers, license plates, digital displays, handwriting on a whiteboard) for robust recognition outside a controlled context.</li>
+                <li><strong>General-purpose OCR</strong> — combine the two extensions above to build a system capable of reading sequences of characters (words, numbers) rather than a single isolated character.</li>
+            </ul>
+
+            <h3>Credits & Contact</h3>
+            <p>
+                Built by <strong>Balian Franquet</strong>. If you have suggestions, questions, or requests, reach out at
+                <a href="mailto:balian.franquet@gmail.com">balian.franquet@gmail.com</a> or visit the GitHub repository:
+                <a href="https://github.com/Balian00/handwritten-digit-recognition" target="_blank" rel="noopener noreferrer">github.com/Balian00/handwritten-digit-recognition</a>.
+            </p>
+
+            <p><a href="../main/index.html">← Back to Home</a></p>
+        </section>
+    </main>
+
+    <footer id="contact">
+        <p>&copy; 2025 Franquet Balian</p>
+    </footer>
+</body>
+</html>

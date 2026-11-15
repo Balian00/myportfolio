@@ -1,0 +1,71 @@
+<h1 id="user-content-ames-housing--price-regression">Ames Housing — Price Regression</h1>
+<p>Personal project applying classical machine learning (scikit-learn only,
+<br>
+no deep learning) to the Ames Housing dataset.</p>
+<h2 id="user-content-objective">Objective</h2>
+<p>Predict house sale prices (<code>SalePrice</code>) from property features (size,
+<br>
+quality, location, etc.). The main goal is to practice a complete and
+<br>
+correct tabular regression workflow — preprocessing, pipelines, cross-
+<br>
+validation, model comparison, error analysis — rather than to chase
+<br>
+leaderboard performance.</p>
+<h2 id="user-content-dataset">Dataset</h2>
+<p>Full Ames Housing dataset (De Cock, 2011), 2930 rows / 82 columns, from
+<br>
+<a href="https://github.com/wblakecannon/ames">wblakecannon/ames</a> (CSV + column
+<br>
+documentation in the same repo). <code>data/raw/</code>, not versioned.</p>
+<h2 id="user-content-methodology">Methodology</h2>
+<ul>
+<li>Train/test split performed once, before any statistic is computed
+<br>
+(imputation, scaling, feature engineering), to avoid data leakage.</li>
+<li>Preprocessing encapsulated in a scikit-learn <code>Pipeline</code> /
+<br>
+<code>ColumnTransformer</code>, fitted only inside cross-validation folds.</li>
+<li>Multiple model families compared (linear/regularized, tree-based,
+<br>
+boosting) via cross-validation before final evaluation on a held-out
+<br>
+test set.</li>
+</ul>
+<h2 id="user-content-project-structure">Project structure</h2>
+<pre><code>ames-housing-regression/
+├── data/raw/                       # raw dataset, never modified
+├── notebooks/
+│   ├── 01_exploration.ipynb        # EDA (train only, post-split)
+│   └── 02_results_summary.ipynb    # results and model comparison
+├── src/
+│   ├── data_loading.py             # loading + train/test split
+│   ├── preprocessing.py            # ColumnTransformer definition
+│   ├── models.py                   # pipelines per model family
+│   └── evaluation.py               # cross-validation, metrics, selection
+├── results/
+│   ├── figures/
+│   └── metrics/
+├── main.py
+├── requirements.txt
+└── README.md
+</code></pre>
+<h2 id="user-content-installation">Installation</h2>
+<p><strong>Windows (PowerShell)</strong></p>
+<pre><code class="language-powershell">python -m venv venv
+venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+</code></pre>
+<p><strong>macOS / Linux</strong></p>
+<pre><code class="language-bash">python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+</code></pre>
+<h2 id="user-content-data-license">Data license</h2>
+<p>Educational use, per De Cock (Truman State University). Full documentation
+<br>
+in the <a href="https://github.com/wblakecannon/ames">source repository</a>.</p>
+<h2 id="user-content-ai-disclosure">AI disclosure</h2>
+<p>This README was written by Claude (Anthropic) at the author's direction,
+<br>
+as part of an AI-assisted learning project on classical ML workflows.</p>

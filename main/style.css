@@ -193,3 +193,54 @@ a:focus-visible, button:focus-visible {
   outline: 2px solid var(--accent-color);
   outline-offset: 2px;
 }
+
+/* Tables (results, comparisons) */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0 1.5rem;
+  font-size: 0.95rem;
+}
+th, td {
+  padding: 8px 12px;
+  text-align: left;
+  border: 1px solid var(--bg-color);
+  color: var(--text-color);
+}
+th {
+  background: var(--header-color);
+  color: #fff;
+  font-weight: 600;
+}
+tbody tr:nth-child(even) {
+  background: var(--bg-color);
+}
+html[data-theme="dark"] th, html[data-theme="dark"] td {
+  border-color: #1f2937;
+}
+
+/* Inline code and code blocks */
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  background: var(--bg-color);
+  color: var(--accent-color);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.9em;
+}
+pre {
+  background: var(--bg-color);
+  color: var(--text-color);
+  padding: 14px 16px;
+  border-radius: 8px;
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+  box-shadow: var(--shadow);
+}
+pre code {
+  background: none;
+  color: inherit;
+  padding: 0;
+  border-radius: 0;
+  font-size: 0.9rem;
+}
